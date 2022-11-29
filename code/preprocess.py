@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import json
-import os
-from tqdm import tqdm, tqdm_notebook
 import random
 import tensorflow as tf
 import csv
@@ -41,11 +39,7 @@ def get_paintings():
 
     print(len(data))
     print(len(label))
-
-
     
-
-
 if __name__ == '__main__':
     get_paintings()
 
