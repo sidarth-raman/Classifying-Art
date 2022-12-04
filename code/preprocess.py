@@ -5,6 +5,7 @@ import json
 import random
 import tensorflow as tf
 import csv
+import os
 
 def get_paintings():
     # Read in CSV of Artists
@@ -23,7 +24,7 @@ def get_paintings():
             single_category_artists.add(underscore_name)
             artist_to_genre[underscore_name] = row[1]["genre"]
 
-    images_directory = '../data/images/images/'
+    images_directory = '../data/images/'
     print(artist_to_genre)
 
 
@@ -33,14 +34,16 @@ def get_paintings():
         if os.path.exists(new_dir):
             print("Found -->", new_dir)
             for x in os.listdir(new_dir):
-                image = plt.imread(new_dir + "/" + x)
-                label.append(current_genre)
-                data.append(image)
+                if x != ".DS_Store":
+                    image = plt.imread(new_dir + "/" + x)
+                    label.append(current_genre)
+                    data.append(image)
 
 
     # Need X0, Y0, X1, Y1 
     print(len(data))
     print(len(label))
+    return data, label
     
 if __name__ == '__main__':
     get_paintings()

@@ -1,17 +1,27 @@
 import numpy as np
 import tensorflow as tf
+from preprocess import get_paintings
 
-def run_task(data, task, subtask="all", epochs=None, batch_size=None):
-    import cnn     
-
+def run_task(epochs=None, batch_size=None):
+    import cnn
     # This will be passed in from preprocess
-    X0, Y0, X1, Y1 = data
+    data, label = get_paintings()
+    # X0, Y0, X1, Y1 = data
     
-    args = cnn.CNN_model
+    args = cnn.CNN_model()
+
+    print(len(data))
+    print(len(label))
+    print(args)
+
 
     # Data passed in
-    X0_sub, Y0_sub = X0, Y0
-    X1_sub, Y1_sub = X1, Y1
+    X0_sub = np.asarray(data[:1000], dtype=np.float32)
+    Y0_sub = np.zeros(1000)
+    X1_sub = np.asarray(data[5669:], dtype=np.float32)
+    Y1_sub = np.zeros(5669)
+
+
 
     # Training model
     print("Model Training")
@@ -26,5 +36,4 @@ def run_task(data, task, subtask="all", epochs=None, batch_size=None):
 
 
 if __name__ == "__main__":
-    data = get_data()
-    run_task(data, args.task, args.subtask)
+    run_task(epochs=5, batch_size=64)
