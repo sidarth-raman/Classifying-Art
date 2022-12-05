@@ -73,9 +73,6 @@ def CNN_model():
         Conv2D(32, 3, activation="leaky_relu"), BatchNormalization(),
         tf.keras.layers.Flatten(), tf.keras.layers.Dense(150, activation='leaky_relu'), tf.keras.layers.Dense(75, activation='leaky_relu'), tf.keras.layers.Dense(10, activation='softmax')],
         
-        # input_prep_fn=input_prep_fn,
-        # output_prep_fn=output_prep_fn,
-        # augment_fn=augment_fn
     )
 
     model.compile(
