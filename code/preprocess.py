@@ -5,44 +5,77 @@ import json
 import random
 import tensorflow as tf
 import csv
+import os
 
-def get_paintings():
-    # Read in CSV of Artists
-    single_category_artists = set()
+
+#write a function that takes in a directory of images and places images into new directory based on genre
+
+def preprocess_genre():
+    pre_preprocess_clean()
     artist_to_genre = {}
     artists = pd.read_csv('../data/artists.csv')
 
-    data = []
-    label = []
-
-    for row in artists.iterrows():
-        # If there are multiple genres for a painter then don't add the artist
-        if "," not in row[1]["genre"]:
-            # Replace space with underscore to match data in data folder
-            underscore_name = row[1]["name"].replace(' ', '_')
-            single_category_artists.add(underscore_name)
-            artist_to_genre[underscore_name] = row[1]["genre"]
-
-    images_directory = '../data/images/images/'
-    print(artist_to_genre)
+    #remove artists with multiple genres
+    artists = artists[~artists["genre"].str.contains(",")].reset_index()
+    #keep only name and genre cols in df
+    artists = artists[["name", "genre"]]
+    #replace spaces with underscores
+    artists["name"] = artists["name"].str.replace(" ", "_")
+    artists["genre"] = artists["genre"].str.replace(" ", "_")
+    artists_names = artists["name"].tolist()
+    genre_names = artists["genre"].unique().tolist()
 
 
-    for artist in single_category_artists:
-        new_dir = images_directory + artist
-        current_genre = artist_to_genre[artist]
-        if os.path.exists(new_dir):
-            print("Found -->", new_dir)
-            for x in os.listdir(new_dir):
-                image = plt.imread(new_dir + "/" + x)
-                label.append(current_genre)
-                data.append(image)
+    #create dictionary of artist to genre
+    artist_to_genre = {artists["name"][i]: artists["genre"][i] for i in range(len(artists))}
 
+    # print(artist_to_genre)
+    #create a new directory for each genre
+    for genre in artist_to_genre.values():
+        if not os.path.exists("../data/genre_images/" + genre):
+            os.makedirs("../data/genre_images/" + genre)
+            print("PROCESS: Created genre_images/" + genre)
 
-    # Need X0, Y0, X1, Y1 
-    print(len(data))
-    print(len(label))
+    # print(artists["name"].tolist())
+    #iterate through each image in the directory
+    for filename in os.listdir("../data/images"):
+        # print(filename)
+        if filename in artists_names:
+            #get the genre of the artist
+            genre = artist_to_genre[filename]
+            #copy and move the images to the genre directory
+            # print(filename, genre)
+            os.system("cp ../data/resized/" + filename + "_* ../data/genre_images/" + genre)
+            # os.system("cp ../data/images/" + filename + "/* ../data/genre_images/" + genre + "/")
+            print("PROCESS: Copied resized images of " + filename + " to genre_images/" + genre)
+
+    remove_img_genre("../data/genre_images/Impressionism")
+    remove_img_genre("../data/genre_images/Post-Impressionism")
+    return None
+
+#function randomly removes half of images from given directory
+def remove_img_genre(genre_dir):
+    #get list of all files in genre directory
+    files = os.listdir(genre_dir)
+    #randomly select half of the files to remove
+    remove = random.sample(files, int(len(files)*(2/3)))
+    #remove the files
+    for file in remove:
+        os.remove(genre_dir + "/" + file)
+        print("PROCESS: Removed " + file + " from " + genre_dir)
+    return None
     
+
+
+def pre_preprocess_clean():
+    if os.path.exists("../data/genre_images"):
+        os.system("rm -r ../data/genre_images")
+        print("PROCESS: Removed genre_images")
+        print()
+
+
 if __name__ == '__main__':
-    get_paintings()
+    preprocess_genre()
+    
 
     
