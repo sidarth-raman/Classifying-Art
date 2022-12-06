@@ -26,10 +26,8 @@ def preprocess_genre():
     genre_names = artists["genre"].unique().tolist()
 
 
-    #create dictionary of artist to genre
     artist_to_genre = {artists["name"][i]: artists["genre"][i] for i in range(len(artists))}
 
-    # print(artist_to_genre)
     #create a new directory for each genre
     for genre in artist_to_genre.values():
         if not os.path.exists("../data/genre_images/" + genre):
@@ -49,22 +47,20 @@ def preprocess_genre():
             # os.system("cp ../data/images/" + filename + "/* ../data/genre_images/" + genre + "/")
             print("PROCESS: Copied resized images of " + filename + " to genre_images/" + genre)
 
-    remove_img_genre("../data/genre_images/Impressionism")
-    remove_img_genre("../data/genre_images/Post-Impressionism")
+    # remove_img_genre("../data/genre_images/Impressionism")
+    # remove_img_genre("../data/genre_images/Post-Impressionism")
     return None
 
-#function randomly removes half of images from given directory
 def remove_img_genre(genre_dir):
     #get list of all files in genre directory
     files = os.listdir(genre_dir)
     #randomly select half of the files to remove
-    remove = random.sample(files, int(len(files)*(2/3)))
+    remove = random.sample(files, int(len(files)*(1/2)))
     #remove the files
     for file in remove:
         os.remove(genre_dir + "/" + file)
         print("PROCESS: Removed " + file + " from " + genre_dir)
     return None
-    
 
 
 def pre_preprocess_clean():

@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 import random
 import tensorflow as tf
-
-from "./preprocess.py" import get_paintings
-
+from preprocess import get_data
 
 def data_augmentation():
     # Choose data augmentation we want
