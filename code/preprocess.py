@@ -47,15 +47,15 @@ def preprocess_genre():
             # os.system("cp ../data/images/" + filename + "/* ../data/genre_images/" + genre + "/")
             print("PROCESS: Copied resized images of " + filename + " to genre_images/" + genre)
 
-    # remove_img_genre("../data/genre_images/Impressionism")
-    # remove_img_genre("../data/genre_images/Post-Impressionism")
+    remove_img_genre("../data/genre_images/Impressionism")
+    remove_img_genre("../data/genre_images/Post-Impressionism")
     return None
 
 def remove_img_genre(genre_dir):
     #get list of all files in genre directory
     files = os.listdir(genre_dir)
     #randomly select half of the files to remove
-    remove = random.sample(files, int(len(files)*(1/2)))
+    remove = random.sample(files, int(len(files)*0.75))
     #remove the files
     for file in remove:
         os.remove(genre_dir + "/" + file)
